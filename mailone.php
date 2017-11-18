@@ -37,7 +37,8 @@ Common::define('MAILONE_LEVEL', false); # Error level to adjust to. false for no
 Common::define('MAILONE_MAIL_SENDER_MAIL', 'robot@wechall.net');
 Common::define('MAILONE_MAIL_SENDER_NAME', 'Mailone');
 Common::define('MAILONE_MAIL_TO', 'root@localhost');
-Common::define('MAILONE_MAIL_SENDMAIL', true); # Default is localhost sendmail
+Common::define('MAILONE_SEND_MAIL', true); # Default is localhost sendmail
+Common::define('MAILONE_SENDMAIL', true); # Default is localhost sendmail
 # Remote SMPT is not recommended.
 Common::define('MAILONE_MAIL_SMTP_HOST', 'localhost');
 Common::define('MAILONE_MAIL_SMTP_USER', 'robot@wechall.net');
@@ -143,17 +144,19 @@ final class Debug
      */
     public static function sendDebugMail($message)
     {
-        $mail = Mail::botMail();
-        $mail->setReceiver(MAILONE_MAIL_TO);
-        $mail->setSubject('MAIL ON ERROR');
-        $mail->setBody($message);
-        
         if (MAILONE_VERBOSE)
         {
             printf("<pre>%s</pre>", htmlspecialchars($message));
         }
         
-        $mail->sendAsText();
+        if (MAILONE_SEND_MAIL)
+        {
+	        $mail = Mail::botMail();
+	        $mail->setReceiver(MAILONE_MAIL_TO);
+	        $mail->setSubject('MAIL ON ERROR');
+	        $mail->setBody($message);
+        	$mail->sendAsText();
+        }
     }
     
     /**
